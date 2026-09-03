@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:food_odering_app/core/constants/app_colors.dart';
 import 'package:food_odering_app/core/constants/app_spacing.dart';
+import 'package:food_odering_app/core/constants/app_radius.dart';
 import 'package:food_odering_app/core/widgets/custom_search_bar.dart';
-import 'package:food_odering_app/core/widgets/category_card.dart';
 import 'package:food_odering_app/core/widgets/food_card.dart';
 import 'package:food_odering_app/features/menu/providers/category_provider.dart';
 import 'package:food_odering_app/features/menu/providers/food_provider.dart';
+import 'package:food_odering_app/models/food.dart';
 
 /// Home tab showing featured and popular foods
 class HomeTab extends ConsumerWidget {
@@ -22,223 +23,153 @@ class HomeTab extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Restaurant Logo & Name
-                    Row(
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_on, color: AppColors.secondary),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.restaurant,
-                            size: 32,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'FoodHouse',
-                              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold,
+                        Text('Deliver to', style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          'New York, NY',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            Text(
-                              'Delicious Food Delivered Fast',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.white.withValues(alpha: 0.9),
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // Greeting
-                    Text(
-                      'Good Morning! 👋',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: AppColors.white,
-                          ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      'What would you like to eat today?',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.white.withValues(alpha: 0.9),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    tooltip: 'Open cart',
+                    onPressed: () => context.push('/cart'),
+                    icon: const Icon(Icons.shopping_bag_outlined),
+                  ),
+                ],
               ),
-
-              // Main Content
-              Padding(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: CustomSearchBar(onTap: () => context.push('/search')),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: Container(
+                height: 156,
                 padding: const EdgeInsets.all(AppSpacing.lg),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/jollof.jpeg'),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.centerRight,
+                    opacity: 0.28,
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Search Bar
-                    CustomSearchBar(
-                      onTap: () => context.push('/search'),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Categories Section
-                    Text(
-                      'Categories',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    Text('Free delivery today', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text('Fresh meals, right to your door.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.white)),
                     const SizedBox(height: AppSpacing.md),
-
-                    // Categories Carousel
-                    categoriesAsync.when(
-                      data: (categories) => SizedBox(
-                        height: 110,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(width: AppSpacing.md),
-                          itemBuilder: (context, index) {
-                            final category = categories[index];
-                            final isSelected = selectedCategory == category.id;
-
-                            return CategoryCard(
-                              category: category,
-                              isSelected: isSelected,
-                              onTap: () {
-                                ref
-                                    .read(selectedCategoryProvider.notifier)
-                                    .selectCategory(category.id);
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (err, stack) => Center(
-                        child: Text('Error: $err'),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () => context.push('/menu'),
+                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.secondary, foregroundColor: AppColors.white),
+                        child: const Text('Order now'),
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Featured Foods Section
-                    Text(
-                      'Featured Today ⭐',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-
-                    featuredFoodsAsync.when(
-                      data: (foods) => foods.isEmpty
-                          ? Center(
-                              child: Text(
-                                'No featured foods available',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            )
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.85,
-                                crossAxisSpacing: AppSpacing.md,
-                                mainAxisSpacing: AppSpacing.md,
-                              ),
-                              itemCount: foods.length,
-                              itemBuilder: (context, index) {
-                                return FoodCard(food: foods[index]);
-                              },
-                            ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (err, stack) => Center(
-                        child: Text('Error: $err'),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Popular Foods Section
-                    Text(
-                      'Popular & Trending 🔥',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-
-                    popularFoodsAsync.when(
-                      data: (foods) => foods.isEmpty
-                          ? Center(
-                              child: Text(
-                                'No popular foods available',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            )
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.85,
-                                crossAxisSpacing: AppSpacing.md,
-                                mainAxisSpacing: AppSpacing.md,
-                              ),
-                              itemCount: foods.length,
-                              itemBuilder: (context, index) {
-                                return FoodCard(food: foods[index]);
-                              },
-                            ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (err, stack) => Center(
-                        child: Text('Error: $err'),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
               ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: Text('What are you craving?', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              height: 48,
+              child: categoriesAsync.when(
+                data: (categories) => ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    final isSelected = selectedCategory == category.id;
+                    return ChoiceChip(
+                      selected: isSelected,
+                      label: Text('${category.icon}  ${category.name}'),
+                      selectedColor: AppColors.primary,
+                      labelStyle: TextStyle(color: isSelected ? AppColors.white : AppColors.textPrimary),
+                      onSelected: (_) => ref.read(selectedCategoryProvider.notifier).selectCategory(category.id),
+                    );
+                  },
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Text('Error: $err'),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            _FoodCarousel(title: 'New on FoodHouse', foodsAsync: featuredFoodsAsync),
+            const SizedBox(height: AppSpacing.xl),
+            _FoodCarousel(title: 'Popular near you', foodsAsync: popularFoodsAsync),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FoodCarousel extends StatelessWidget {
+  final String title;
+  final AsyncValue<List<Food>> foodsAsync;
+
+  const _FoodCarousel({required this.title, required this.foodsAsync});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Row(
+            children: [
+              Expanded(child: Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold))),
+              TextButton(onPressed: () => context.push('/menu'), child: const Text('See all')),
             ],
           ),
         ),
-      ),
+        const SizedBox(height: AppSpacing.sm),
+        SizedBox(
+          height: 300,
+          child: foodsAsync.when(
+            data: (foods) => ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              scrollDirection: Axis.horizontal,
+              itemCount: foods.length,
+              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.md),
+              itemBuilder: (context, index) => SizedBox(width: 220, child: FoodCard(food: foods[index])),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -32,7 +32,7 @@ class FoodCard extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
-        elevation: 2,
+        elevation: 1,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,7 +40,7 @@ class FoodCard extends ConsumerWidget {
             Stack(
               children: [
                 Container(
-                  height: 180,
+                  height: 120,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -48,7 +48,7 @@ class FoodCard extends ConsumerWidget {
                       topRight: Radius.circular(AppRadius.lg),
                     ),
                     image: DecorationImage(
-                      image: NetworkImage(food.image),
+                      image: AssetImage(food.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -151,22 +151,22 @@ class FoodCard extends ConsumerWidget {
                       ),
 
                       // Rating
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            size: 16,
-                            color: Colors.amber,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${food.rating}',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Icon(
+                      //       Icons.star_rounded,
+                      //       size: 16,
+                      //       color: Colors.amber,
+                      //     ),
+                      //     const SizedBox(width: 4),
+                      //     Text(
+                      //       '${food.rating}',
+                      //       style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      //             fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),

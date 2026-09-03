@@ -83,6 +83,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 CustomButton(
                   label: 'Send Reset Link',
                   onPressed: _handleSendReset,
+                  elevation: 0,
                 ),
               ] else ...[
                 // Success Message

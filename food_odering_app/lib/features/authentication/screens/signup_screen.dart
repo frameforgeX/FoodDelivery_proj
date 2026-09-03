@@ -194,9 +194,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: AppSpacing.xl),
 
               // Sign Up Button
-              CustomButton(
-                label: 'Create Account',
-                onPressed: _agreeToTerms ? _handleSignUp : () {},
+              Center(
+                child: CustomButton(
+                  label: 'Create Account',
+                  onPressed: _agreeToTerms ? _handleSignUp : () {},
+                  width: 350,
+                    borderRadius: BorderRadius.circular(50),
+                    elevation: 0,
+                ),
               ),
               const SizedBox(height: AppSpacing.lg),
 

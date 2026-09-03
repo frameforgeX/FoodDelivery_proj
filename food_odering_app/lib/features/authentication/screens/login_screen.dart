@@ -138,12 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: AppSpacing.xl),
 
               // Login Button
-              CustomButton(
-                label: 'Log In',
-                onPressed: _handleLogin,
-                width: 350,
-                borderRadius: BorderRadius.circular(50),
-                elevation: 0,
+              Center(
+                child: CustomButton(
+                  label: 'Log In',
+                  onPressed: _handleLogin,
+                  width: 350,
+                  borderRadius: BorderRadius.circular(50),
+                  elevation: 0,
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
 

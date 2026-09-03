@@ -197,8 +197,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
                           child: ClipOval(
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
+                            child: Image.asset(
+                              'assets/images/jollof.jpeg',
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => const Icon(
                                 Icons.fastfood_rounded,

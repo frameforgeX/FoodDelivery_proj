@@ -64,7 +64,7 @@ class _FoodDetailsScreenState extends ConsumerState<FoodDetailsScreen> {
                     ),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
-                    background: Image.network(
+                    background: Image.asset(
                       food.image,
                       fit: BoxFit.cover,
                     ),
